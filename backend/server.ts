@@ -2,9 +2,9 @@
 
 import express from 'express';
 import cors from 'cors';
-import ImageRouter from './src/routes/ImageRouter';
-import PlanetRouter from './src/routes/PlanetRouter';
-import AstronautRouter from './src/routes/AstronautRouter';
+import ImageRouter from './src/routes/Image.router';
+import PlanetRouter from './src/routes/Planet.router';
+import AstronautRouter from './src/routes/Astronaut.router';
 
 const app = express();
 

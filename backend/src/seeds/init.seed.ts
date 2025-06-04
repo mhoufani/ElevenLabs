@@ -1,9 +1,10 @@
 import { Knex } from 'knex';
 
 export const seed = async (knex: Knex): Promise<void> => {
-  await knex('images').del();
-  await knex('planets').del();
+  // Delete in reverse order of dependencies
   await knex('astronauts').del();
+  await knex('planets').del();
+  await knex('images').del();
 
   const imagesData = [
     { name: 'Donut Factory Image', path: '/assets/donut_factory.jpg' },

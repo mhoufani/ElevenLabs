@@ -1,4 +1,3 @@
-version: "3.5"
 
 services:
   init-remove-gitkeep:
@@ -31,6 +30,7 @@ services:
       - init-remove-gitkeep
 
   server-eleven-test:
+    restart: always
     depends_on:
       db-eleven-test:
         condition: service_healthy
@@ -44,8 +44,14 @@ services:
       DB_USER: eleven
       DB_PASSWORD: eleven11
       DB_NAME: eleven
-    volumes:
-      - ./backend:/code/
+    command: npm run dev
+    develop:
+      watch:
+        - action: sync
+          path: ./backend
+          target: /app
+          ignore:
+            - ./backend/node_modules/
 
   front-eleven-test:
     restart: always
