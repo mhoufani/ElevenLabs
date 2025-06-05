@@ -25,6 +25,7 @@ import { useCurrentPlanet } from "../../contexts/SpaceTravelContext.tsx";
 
 // Styles
 import styles from "./CreateOrEditAstronaut.module.css";
+import { useCallback } from "react";
 
 export function CreateOrEditAstronaut() {
   const navigate = useNavigate();
@@ -51,9 +52,14 @@ export function CreateOrEditAstronaut() {
     mode === "create" ? handleAstronautFormCreate : handleAstronautFormEdit;
 
   const { currentPlanet } = useCurrentPlanet();
-  const { isLoading, data } = useFetch<Astronaut | undefined>((options?: RequestInit) =>
-    getOneAstronautFromAPI(astronautId, options),
+  
+  // avoid re-rendering of the getOneAstronaut function when the astronautId not changes
+  const getOneAstronaut = useCallback<((options?: RequestInit) => Promise<Astronaut | undefined>)>(
+    (options?: RequestInit) => getOneAstronautFromAPI(astronautId, options),
+    [astronautId],
   );
+  // useFetch is not re-rendering when the getOneAstronaut function is re-created
+  const { isLoading, data } = useFetch<Astronaut | undefined>(getOneAstronaut);
 
   return (
     <Flexbox flexDirection="column" className={styles.createoreditastronaut}>

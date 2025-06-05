@@ -52,8 +52,8 @@ export function AstronautForm({
     currentPlanet?.isHabitable;
 
   const [formState, setFormState] = useState<FormStateType>({});
-  const [astronautFirstname, setAstronautFirstname] = useState('');
-  const [astronautLastname, setAstronautLastname] = useState('');
+  const [astronautFirstname, setAstronautFirstname] = useState(astronautForUpdate?.firstname || '');
+  const [astronautLastname, setAstronautLastname] = useState(astronautForUpdate?.lastname || '');
   const [astronautOriginPlanet] = useState('');
 
   const validateAndSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -110,7 +110,7 @@ export function AstronautForm({
             label="firstname"
             placeholder="John"
             required
-            defaultValue={astronautForUpdate?.firstname || ''}
+            defaultValue={astronautFirstname}
             error={formState.firstname}
             onChange={(e) => setAstronautFirstname(e.target.value)}
           />
@@ -119,7 +119,7 @@ export function AstronautForm({
             label="lastname"
             placeholder="Doe"
             required
-            defaultValue={astronautForUpdate?.lastname || ''}
+            defaultValue={astronautLastname}
             error={formState.lastname}
             onChange={(e) => setAstronautLastname(e.target.value)}
           />
