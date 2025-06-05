@@ -46,8 +46,16 @@ const PlanetController = {
    * @throws {Error} When database query fails
    */
   getAll: async (req: Request, res: Response): Promise<void> => {
+    const { filterName } = req.query;
     try {
-      const planetsData = await knex('planets')
+      
+      const query = knex('planets');
+      if (filterName) {
+        Logger.info('PlanetController.getAll', `Applying name filter: ${filterName}`);
+        query.where('planets.name', 'like', `%${filterName}%`);
+      }
+
+      const planetsData = await query
         .select(
           'planets.*',
           'images.path',
@@ -63,6 +71,7 @@ const PlanetController = {
         });
       });
 
+      Logger.info('PlanetController.getAll', `Successfully fetched ${planets.length} planets`);
       res.status(200).json(planets);
     } catch (error) {
       Logger.error('PlanetController.getAll', 'Failed to fetch planets', error);
@@ -97,6 +106,8 @@ const PlanetController = {
           path: planetData.path,
           name: planetData.imageName,
         });
+        
+        Logger.info('PlanetController.getById', `Successfully fetched planet with id: ${id}`);
         res.status(200).json(response);
       } else {
         Logger.warn('PlanetController.getById', `Planet not found with id: ${id}`);
