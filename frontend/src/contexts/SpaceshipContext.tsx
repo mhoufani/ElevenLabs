@@ -1,5 +1,5 @@
 // React
-import { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode, useCallback } from 'react';
 
 // Error
 import { FetchError } from '../errors/FetchError';
@@ -33,14 +33,14 @@ export function SpaceshipProvider({ children }: { children: ReactNode }) {
     initialSpaceshipContext,
   );
 
-  const updateSpaceshipContext = (
-    stateToUpdate: Partial<SpaceshipContextType>,
-  ) => {
+  // avoid re-rendering of the context provider when the state is updated
+  const updateSpaceshipContext = useCallback(
+    (stateToUpdate: Partial<SpaceshipContextType>) => {
     setSpaceshipState((prevState) => ({
       ...prevState,
       ...stateToUpdate,
     }));
-  };
+  }, [setSpaceshipState]);
 
   return (
     <SpaceshipContext.Provider
@@ -75,9 +75,15 @@ export function useAstronautList(): {
 } {
   const { astronautList, updateSpaceshipContext } = useSpaceshipContext();
 
+  const setAstronautList = useCallback(
+    (astronautList: SpaceshipContextType['astronautList']) => {
+      updateSpaceshipContext({ astronautList });
+    },
+    [updateSpaceshipContext],
+  );
+
   return {
     astronautList,
-    setAstronautList: (astronautList: SpaceshipContextType['astronautList']) =>
-      updateSpaceshipContext({ astronautList }),
+    setAstronautList,
   };
 }

@@ -42,6 +42,7 @@ export function AstronautListContainer({
     astronautList: { isLoading, astronautList: astronauts, error },
     setAstronautList,
   } = useAstronautList();
+
   const { pushInfoMessage, pushErrorMessage } = useMessageCenter();
 
   const handleDeleteAstronaut = async (astronaut: AstronautForList) => {
@@ -72,7 +73,7 @@ export function AstronautListContainer({
 
   return (
     <>
-      {!isLoading ? (
+      {isLoading ? (
         <HUDWindowLoader
           label="astronaut in the spaceship"
           className={styles.astronautlistcontainer}

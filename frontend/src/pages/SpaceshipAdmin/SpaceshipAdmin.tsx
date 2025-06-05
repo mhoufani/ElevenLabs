@@ -40,9 +40,10 @@ export function SpaceshipAdmin() {
   const { isLoading, data, error } = useFetch<GetAstronautListAPIResponse>(getAstronautListFromAPI);
   const { setAstronautList } = useAstronautList();
 
-  // todo: fix reference to setAstronautList
   useEffect(() => {
-    setAstronautList({ isLoading, astronautList: data, error: error as FetchError | null });
+    if (data !== undefined || error !== undefined) {
+      setAstronautList({ isLoading, astronautList: data, error: error as FetchError | null });
+    }
   }, [data, error, isLoading, setAstronautList]);
 
   return (
