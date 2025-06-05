@@ -125,6 +125,7 @@ const AstronautController = {
             name: astronautData.imageName,
           },
         });
+        Logger.info('AstronautController.getById', `Successfully fetched astronaut with id: ${id}`);
         res.status(200).json(response);
       } else {
         Logger.warn('AstronautController.getById', `Astronaut not found with id: ${id}`);
