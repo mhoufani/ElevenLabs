@@ -36,16 +36,17 @@ import IconSpaceship from "../../assets/icon-spaceship.svg?react";
 
 // Styles
 import styles from "./Cockpit.module.css";
+import { FetchError } from "../../errors/FetchError.ts";
 
 export function Cockpit() {
   const navigate = useNavigate();
   const handleNavigateToSpaceshipAdminPage = () => navigate("/spaceship-admin");
 
-  const { isLoading, data, error } = useFetch(getPlanetListFromAPI);
+  const { isLoading, data, error } = useFetch<GetPlanetListAPIResponse>(getPlanetListFromAPI);
   const { setPlanetList } = usePlanetList();
 
   useEffect(() => {
-    setPlanetList({ isLoading, planetList: data, error });
+    setPlanetList({ isLoading, planetList: data, error: error as FetchError | null });
   }, [data, error, isLoading, setPlanetList]);
 
   const { isTraveling } = useIsTraveling();

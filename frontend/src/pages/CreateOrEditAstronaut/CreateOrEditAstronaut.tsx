@@ -51,7 +51,7 @@ export function CreateOrEditAstronaut() {
     mode === "create" ? handleAstronautFormCreate : handleAstronautFormEdit;
 
   const { currentPlanet } = useCurrentPlanet();
-  const { isLoading, data } = useFetch((options?: RequestInit) =>
+  const { isLoading, data } = useFetch<Astronaut | undefined>((options?: RequestInit) =>
     getOneAstronautFromAPI(astronautId, options),
   );
 

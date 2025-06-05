@@ -96,14 +96,14 @@ export const HUDAutoComplete = forwardRef<
   const {
     isLoading,
     data,
-    error: fetchError,
+    error: fetchError,  
   } = useFetch((options?: RequestInit) => fetchOptions(undefined, options));
 
   useEffect(() => {
     setOptions({
       isLoading,
       data,
-      error: fetchError,
+      error: fetchError as FetchError | null,
       isVisible: false,
     });
   }, [isLoading, data, fetchError]);

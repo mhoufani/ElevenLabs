@@ -26,6 +26,7 @@ import { useAstronautList } from "../../contexts/SpaceshipContext.tsx";
 
 // Styles
 import styles from "./SpaceshipAdmin.module.css";
+import { FetchError } from "../../errors/FetchError.ts";
 
 export function SpaceshipAdmin() {
   const navigate = useNavigate();
@@ -36,12 +37,13 @@ export function SpaceshipAdmin() {
       ? navigate(`/astronaut/edit/${astronautId}`)
       : navigate("/astronaut/create");
 
-  const { isLoading, data, error } = useFetch(getAstronautListFromAPI);
+  const { isLoading, data, error } = useFetch<GetAstronautListAPIResponse>(getAstronautListFromAPI);
   const { setAstronautList } = useAstronautList();
 
+  // todo: fix reference to setAstronautList
   useEffect(() => {
-    setAstronautList({ isLoading, astronautList: data, error });
-  }, [data, error, isLoading]);
+    setAstronautList({ isLoading, astronautList: data, error: error as FetchError | null });
+  }, [data, error, isLoading, setAstronautList]);
 
   return (
     <Flexbox className={styles.spaceshipadmin} flexDirection="column">
