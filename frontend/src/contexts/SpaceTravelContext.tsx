@@ -1,5 +1,5 @@
 // React
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, useCallback, useContext, useState } from 'react';
 
 // Error
 import { FetchError } from '../errors/FetchError';
@@ -37,14 +37,13 @@ export function SpaceTravelProvider({ children }: { children: ReactNode }) {
   const [spaceTravelState, setSpaceTravelState] =
     useState<SpaceTravelContextType>(initialSpaceTravelContext);
 
-  const updateSpaceTravelContext = (
-    stateToUpdate: Partial<SpaceTravelContextType>,
-  ) => {
+  const updateSpaceTravelContext = useCallback(
+    (stateToUpdate: Partial<SpaceTravelContextType>) => {
     setSpaceTravelState((prevState) => ({
       ...prevState,
       ...stateToUpdate,
     }));
-  };
+  }, [setSpaceTravelState]);
 
   return (
     <SpaceTravelContext.Provider
@@ -123,9 +122,12 @@ export function usePlanetList(): {
 } {
   const { planetList, updateSpaceTravelContext } = useSpaceTravelContext();
 
+  const setPlanetList = useCallback((planetList: SpaceTravelContextType['planetList']) => {
+    updateSpaceTravelContext({ planetList });
+  }, [updateSpaceTravelContext]);
+
   return {
     planetList,
-    setPlanetList: (planetList: SpaceTravelContextType['planetList']) =>
-      updateSpaceTravelContext({ planetList }),
+    setPlanetList,
   };
 }

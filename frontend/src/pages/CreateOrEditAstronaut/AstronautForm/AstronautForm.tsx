@@ -10,9 +10,7 @@ import { Form } from '../../../components/Form';
 import { HUDInput } from '../../../components/HUDInput';
 import { HUDButton } from '../../../components/HUDButton';
 import { Flexbox } from '../../../components/Flexbox';
-
-// Context
-import { useCurrentPlanet } from '../../../contexts/SpaceTravelContext.tsx';
+import { HUDSelect } from '../../../components/HUDSelect';
 
 // API
 import {
@@ -22,9 +20,11 @@ import {
 
 // Styles
 import styles from './AstronautForm.module.css';
+import { Planet } from '../../../api/planet.api.ts';
 
 type AstronautFormProps = {
   astronautForUpdate?: Astronaut | null;
+  planetList: Planet[];
   className?: string;
   mode?: string;
   onCancel: MouseEventHandler<HTMLButtonElement>;
@@ -39,22 +39,22 @@ type FormStateType = {
 
 export function AstronautForm({
   astronautForUpdate,
+  planetList,
   className,
   mode = 'create',
   onCancel,
   onSubmit,
 }: AstronautFormProps) {
   const componentClassNames = classnames(styles.astronautform, className);
-  const { currentPlanet } = useCurrentPlanet();
-  const canCreate =
-    mode === 'create' &&
-    currentPlanet !== 'NO_WHERE' &&
-    currentPlanet?.isHabitable;
 
   const [formState, setFormState] = useState<FormStateType>({});
   const [astronautFirstname, setAstronautFirstname] = useState(astronautForUpdate?.firstname || '');
   const [astronautLastname, setAstronautLastname] = useState(astronautForUpdate?.lastname || '');
-  const [astronautOriginPlanet] = useState('');
+  const [astronautOriginPlanet, setAstronautOriginPlanet] = useState(
+    mode === 'create' 
+    ? planetList[0]?.id.toString() ?? '' 
+    : astronautForUpdate?.originPlanet?.id.toString() ?? ''
+  );
 
   const validateAndSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -123,6 +123,17 @@ export function AstronautForm({
             error={formState.lastname}
             onChange={(e) => setAstronautLastname(e.target.value)}
           />
+          <HUDSelect
+            name="originPlanet"
+            label="originPlanet"
+            required
+            value={astronautOriginPlanet}
+            options={planetList.map((planet) => ({
+              value: planet.id.toString(),
+              label: planet.name,
+            }))}
+            onChange={(e) => setAstronautOriginPlanet(e.target.value)}
+          />
           <Flexbox
             className={styles.astronautformButtons}
             alignItems="center"
@@ -130,14 +141,14 @@ export function AstronautForm({
           >
             <HUDButton onClick={onCancel}>CANCEL</HUDButton>
             {mode === 'create' ? (
-              <HUDButton disabled={!canCreate}>CREATE</HUDButton>
+              <HUDButton>CREATE</HUDButton>
             ) : (
               <HUDButton>EDIT</HUDButton>
             )}
           </Flexbox>
         </Form>
       </HUDWindow>
-      {mode !== 'edit' && !canCreate && (
+      {mode === 'create' && !planetList.find((planet) => planet.id === parseInt(astronautOriginPlanet)) && (
         <HUDWindow className={styles.astronautformCannotCreate}>
           <h2>Warning !</h2>
           <p>

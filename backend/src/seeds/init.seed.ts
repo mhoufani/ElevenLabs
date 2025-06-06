@@ -11,6 +11,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     { name: 'Duck Invaders Image', path: '/assets/duck_invaders.jpg' },
     { name: 'Raccoon from Asgard Image', path: '/assets/raccoon_asgards.jpg' },
     { name: 'Schizo Cats Image', path: '/assets/schizo_cats.jpg' },
+    { name: 'No Where Image', path: '/assets/no_where.jpg' },
   ];
 
   await knex('images').insert(imagesData);
@@ -20,6 +21,7 @@ export const seed = async (knex: Knex): Promise<void> => {
     { name: 'Duck Invaders', description: 'La danse ici est une religion', isHabitable: true, imageId: 2 },
     { name: 'Raccoon from Asgard', description: 'Espiegle mais pas trop', isHabitable: true, imageId: 3 },
     { name: 'Schizo Cats', description: 'Non leur planete n\'est pas une pelote', isHabitable: true, imageId: 4 },
+    { name: 'No Where', description: 'No where', isHabitable: false, imageId: 5 },
   ];
 
   await knex('planets').insert(planetsData);
